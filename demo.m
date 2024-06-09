@@ -4,10 +4,8 @@ warning off;
 addpath(genpath('./'));
 
 %% dataset
-dataname = {'SUNRGBD_fea'};
-% dsPath = './Dataset/';
-% dsPath = '/media/lab225-2/disk1/CTH/9/OMSC/Dataset/';
-dsPath = '/media/sda/cth/OMSC2/OMSC/Dataset/';
+dataname = {'Caltech101-20'};
+dsPath = './Dataset/';
 resPath = './result/';
 metric = {'ACC','nmi','Purity','Fscore','Precision','Recall','AR','Entropy'};
 
@@ -31,14 +29,10 @@ end
 dlmwrite(txtpath, strcat('Dataset:',cellstr(dataName), '  Date:',datestr(now)),'-append','delimiter','','newline','pc');
 
 %% parameters setting
-% m = [k,2*k,3*k];
-% d = [k,2*k,3*k,4*k,5*k];
-% lambda = [0.0001,0.0001,0.001,0.01,0.1,1,10];
-% beta = [0.0001,0.0001,0.001,0.01,0.1,1,10];
 m = [k,2*k,3*k];
-d = [k];
-lambda = [0.001];
-beta = [1];
+d = [k,2*k,3*k,4*k,5*k];
+lambda = [0.0001,0.0001,0.001,0.01,0.1,1,10];
+beta = [0.0001,0.0001,0.001,0.01,0.1,1,10];
 
 %%
 for ichor = 1:length(m)
@@ -52,11 +46,9 @@ for ichor = 1:length(m)
                 timer(ichor,id)  = toc;
                 str = strcat('m:',num2str(m(ichor)),'       lambda:',num2str(lambda(j)),'         beta:',num2str(beta(i)),'      d:',num2str(d(id)),'     res:',num2str(res),'       Time:',num2str(timer(ichor,id)));
                 disp(str);
-%                 resall{ichor,id} = res;
-%                 objall{ichor,id} = obj;
                 dlmwrite(txtpath, [lambda(j) beta(i) m(ichor) d(id) res timer(ichor,id)],'-append','delimiter','\t','newline','pc');
                 matname = ['_Anchor_',num2str(m(ichor)),'_Dimensionality_',num2str(d(id)),'.mat'];
-                save([matpath,'/',matname],'Z','P','A','alpha');
+                save([matpath,'/',matname],'P','A','Z','alpha');
             end
         end
     end
